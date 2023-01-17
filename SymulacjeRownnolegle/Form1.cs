@@ -54,8 +54,10 @@ namespace SymulacjeRownnolegle
                     bool wall_collision = new_person.CheckCollisionWithWalls();
                     if(!wall_collision)
                     {
-                        bool collision = person.CheckCollisionBetweenNew(this.population.people, new_center_x, new_center_y);
-
+                        //bool collision = person.CheckCollisionBetweenNew(this.population.people, new_center_x, new_center_y);
+                        IEnumerable<Person> filtering_query = this.population.people.Where(person_filter => person_filter != person);
+                        List<Person> filterd_persons = filtering_query.ToList();
+                        bool collision = new_person.CheckCollisionBetweenPeople(filterd_persons);
                         if (!collision)
                         {
                             person.center_x = new_center_x;
@@ -101,7 +103,7 @@ namespace SymulacjeRownnolegle
             {
                 int y = rnd.Next(100, 300);
                 Person new_person = new Person(Global.RightEntranceX, y, this.person_radius, "right");
-                bool start_collision = new_person.CheckCollisionBetweenExistingPeople(people);
+                bool start_collision = new_person.CheckCollisionBetweenPeople(people);
                 bool wall_collision = new_person.CheckCollisionWithWalls();
                 
                 if(!start_collision && ! wall_collision)
@@ -124,7 +126,7 @@ namespace SymulacjeRownnolegle
                     new_person = new Person(Global.LeftEntranceX, y, this.person_radius, "left");
                 else
                     new_person = new Person(Global.RightEntranceX, y, this.person_radius, "right");
-                bool start_collision = new_person.CheckCollisionBetweenExistingPeople(this.population.people);
+                bool start_collision = new_person.CheckCollisionBetweenPeople(this.population.people);
                 bool wall_collision = new_person.CheckCollisionWithWalls();
 
                 if (!start_collision && !wall_collision)
@@ -207,7 +209,11 @@ namespace SymulacjeRownnolegle
 
         private void button3_Click(object sender, EventArgs e)
         {
-            Console.WriteLine(7 + -3);
+            List<string> fruits =
+                new List<string> { "apple", "passionfruit", "banana", "mango",
+                    "orange", "blueberry", "grape", "strawberry" };
+
+            IEnumerable<string> query = fruits.Where(fruit => fruit.Length < 6);
         }
 
     }
@@ -245,7 +251,7 @@ namespace SymulacjeRownnolegle
             
         }
 
-        public bool CheckCollisionBetweenExistingPeople(List<Person> people)
+        public bool CheckCollisionBetweenPeople(List<Person> people)
         {
             bool collision = false;
             foreach (Person p in people)
@@ -255,24 +261,6 @@ namespace SymulacjeRownnolegle
                     double distance = Math.Sqrt(Math.Pow(this.center_x - p.center_x, 2) + Math.Pow(this.center_y - p.center_y, 2));
                     if (distance <= this.radius + p.radius)
                         collision = true;
-
-                }
-            }
-            return collision;
-        }
-
-        public bool CheckCollisionBetweenNew(List<Person> people, int center_x, int center_y)
-        {
-            bool collision = false;
-            Person new_person = new Person(center_x, center_y, 20, "left");
-            foreach (Person p in people)
-            {
-                if (this != p && p.status == 1)
-                {
-                    double distance = Math.Sqrt(Math.Pow(new_person.center_x - p.center_x, 2) + Math.Pow(new_person.center_y - p.center_y, 2));
-                    if (distance <= new_person.radius + p.radius)
-                        collision = true;
-
                 }
             }
             return collision;
