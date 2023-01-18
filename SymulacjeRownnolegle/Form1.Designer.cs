@@ -59,6 +59,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.numeric_population_speed = new System.Windows.Forms.NumericUpDown();
             this.scroll_population_speed = new System.Windows.Forms.HScrollBar();
+            this.timer_paraller_simulation_display = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numeric_population_number)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numeric_new_person)).BeginInit();
@@ -72,7 +73,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1333, 168);
+            this.button1.Location = new System.Drawing.Point(1333, 183);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -359,6 +360,11 @@
             this.scroll_population_speed.Value = 50;
             this.scroll_population_speed.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scroll_population_speed_Scroll);
             // 
+            // timer_paraller_simulation_display
+            // 
+            this.timer_paraller_simulation_display.Interval = 1;
+            this.timer_paraller_simulation_display.Tick += new System.EventHandler(this.timer_paraller_simulation_display_Tick);
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1491, 520);
@@ -429,6 +435,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown numeric_population_speed;
         private System.Windows.Forms.HScrollBar scroll_population_speed;
+        private System.Windows.Forms.Timer timer_paraller_simulation_display;
     }
 }
 
