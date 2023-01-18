@@ -30,36 +30,56 @@
         {
             this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.button2 = new System.Windows.Forms.Button();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.button3 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.currently_population_label = new System.Windows.Forms.Label();
+            this.currently_population_value = new System.Windows.Forms.Label();
+            this.currently_left_label = new System.Windows.Forms.Label();
+            this.currently_left_value = new System.Windows.Forms.Label();
+            this.currently_right_label = new System.Windows.Forms.Label();
+            this.currently_right_value = new System.Windows.Forms.Label();
+            this.timer4 = new System.Windows.Forms.Timer(this.components);
+            this.population_counter_label = new System.Windows.Forms.Label();
+            this.population_counter_value = new System.Windows.Forms.Label();
+            this.right_group_finished_label = new System.Windows.Forms.Label();
+            this.right_group_finished_value = new System.Windows.Forms.Label();
+            this.left_group_finished_label = new System.Windows.Forms.Label();
+            this.left_group_finished_value = new System.Windows.Forms.Label();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1030, 518);
             this.panel1.TabIndex = 0;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(0, 3);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(1000, 1000);
+            this.pictureBox1.TabIndex = 12;
+            this.pictureBox1.TabStop = false;
+            // 
             // timer1
             // 
+            this.timer1.Interval = 50;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1064, 50);
+            this.button1.Location = new System.Drawing.Point(1203, 42);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -69,11 +89,12 @@
             // 
             // timer2
             // 
+            this.timer2.Interval = 50;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1055, 114);
+            this.button2.Location = new System.Drawing.Point(1194, 106);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(83, 30);
             this.button2.TabIndex = 2;
@@ -88,7 +109,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(1054, 171);
+            this.button3.Location = new System.Drawing.Point(1193, 163);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(83, 32);
             this.button3.TabIndex = 3;
@@ -96,71 +117,136 @@
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
-            // label1
+            // currently_population_label
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1052, 249);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(106, 16);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Population count";
+            this.currently_population_label.AutoSize = true;
+            this.currently_population_label.Location = new System.Drawing.Point(1042, 231);
+            this.currently_population_label.Name = "currently_population_label";
+            this.currently_population_label.Size = new System.Drawing.Size(125, 32);
+            this.currently_population_label.TabIndex = 6;
+            this.currently_population_label.Text = "Currently population\r\n count";
             // 
-            // label2
+            // currently_population_value
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1061, 277);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(0, 16);
-            this.label2.TabIndex = 7;
+            this.currently_population_value.AutoSize = true;
+            this.currently_population_value.Location = new System.Drawing.Point(1052, 277);
+            this.currently_population_value.Name = "currently_population_value";
+            this.currently_population_value.Size = new System.Drawing.Size(100, 32);
+            this.currently_population_value.TabIndex = 7;
+            this.currently_population_value.Text = "Start simulation \r\nto see results";
             // 
-            // label3
+            // currently_left_label
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(1164, 249);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(101, 16);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Left group count";
+            this.currently_left_label.AutoSize = true;
+            this.currently_left_label.Location = new System.Drawing.Point(1173, 231);
+            this.currently_left_label.Name = "currently_left_label";
+            this.currently_left_label.Size = new System.Drawing.Size(120, 32);
+            this.currently_left_label.TabIndex = 8;
+            this.currently_left_label.Text = "Currently left group \r\ncount";
             // 
-            // label4
+            // currently_left_value
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(1164, 277);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(0, 16);
-            this.label4.TabIndex = 9;
+            this.currently_left_value.AutoSize = true;
+            this.currently_left_value.Location = new System.Drawing.Point(1177, 277);
+            this.currently_left_value.Name = "currently_left_value";
+            this.currently_left_value.Size = new System.Drawing.Size(100, 32);
+            this.currently_left_value.TabIndex = 9;
+            this.currently_left_value.Text = "Start simulation \r\nto see results";
             // 
-            // label5
+            // currently_right_label
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(1280, 249);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(111, 16);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "Right group count";
+            this.currently_right_label.AutoSize = true;
+            this.currently_right_label.Location = new System.Drawing.Point(1299, 231);
+            this.currently_right_label.Name = "currently_right_label";
+            this.currently_right_label.Size = new System.Drawing.Size(128, 32);
+            this.currently_right_label.TabIndex = 10;
+            this.currently_right_label.Text = "Currently right group \r\ncount";
             // 
-            // label6
+            // currently_right_value
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(1281, 277);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(0, 16);
-            this.label6.TabIndex = 11;
+            this.currently_right_value.AutoSize = true;
+            this.currently_right_value.Location = new System.Drawing.Point(1308, 277);
+            this.currently_right_value.Name = "currently_right_value";
+            this.currently_right_value.Size = new System.Drawing.Size(100, 32);
+            this.currently_right_value.TabIndex = 11;
+            this.currently_right_value.Text = "Start simulation \r\nto see results";
+            // 
+            // population_counter_label
+            // 
+            this.population_counter_label.AutoSize = true;
+            this.population_counter_label.Location = new System.Drawing.Point(1036, 352);
+            this.population_counter_label.Name = "population_counter_label";
+            this.population_counter_label.Size = new System.Drawing.Size(139, 32);
+            this.population_counter_label.TabIndex = 12;
+            this.population_counter_label.Text = "Number of people \r\nin the whole simulation";
+            // 
+            // population_counter_value
+            // 
+            this.population_counter_value.AutoSize = true;
+            this.population_counter_value.Location = new System.Drawing.Point(1052, 400);
+            this.population_counter_value.Name = "population_counter_value";
+            this.population_counter_value.Size = new System.Drawing.Size(100, 32);
+            this.population_counter_value.TabIndex = 13;
+            this.population_counter_value.Text = "Start simulation \r\nto see results";
+            // 
+            // right_group_finished_label
+            // 
+            this.right_group_finished_label.AutoSize = true;
+            this.right_group_finished_label.Location = new System.Drawing.Point(1299, 352);
+            this.right_group_finished_label.Name = "right_group_finished_label";
+            this.right_group_finished_label.Size = new System.Drawing.Size(125, 16);
+            this.right_group_finished_label.TabIndex = 14;
+            this.right_group_finished_label.Text = "Right group finished";
+            // 
+            // right_group_finished_value
+            // 
+            this.right_group_finished_value.AutoSize = true;
+            this.right_group_finished_value.Location = new System.Drawing.Point(1308, 400);
+            this.right_group_finished_value.Name = "right_group_finished_value";
+            this.right_group_finished_value.Size = new System.Drawing.Size(100, 32);
+            this.right_group_finished_value.TabIndex = 15;
+            this.right_group_finished_value.Text = "Start simulation \r\nto see results";
+            // 
+            // left_group_finished_label
+            // 
+            this.left_group_finished_label.AutoSize = true;
+            this.left_group_finished_label.Location = new System.Drawing.Point(1173, 352);
+            this.left_group_finished_label.Name = "left_group_finished_label";
+            this.left_group_finished_label.Size = new System.Drawing.Size(115, 16);
+            this.left_group_finished_label.TabIndex = 16;
+            this.left_group_finished_label.Text = "Left group finished";
+            // 
+            // left_group_finished_value
+            // 
+            this.left_group_finished_value.AutoSize = true;
+            this.left_group_finished_value.Location = new System.Drawing.Point(1177, 400);
+            this.left_group_finished_value.Name = "left_group_finished_value";
+            this.left_group_finished_value.Size = new System.Drawing.Size(100, 32);
+            this.left_group_finished_value.TabIndex = 17;
+            this.left_group_finished_value.Text = "Start simulation \r\nto see results";
             // 
             // Form1
             // 
-            this.ClientSize = new System.Drawing.Size(1394, 520);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(1452, 520);
+            this.Controls.Add(this.left_group_finished_value);
+            this.Controls.Add(this.left_group_finished_label);
+            this.Controls.Add(this.right_group_finished_value);
+            this.Controls.Add(this.right_group_finished_label);
+            this.Controls.Add(this.population_counter_value);
+            this.Controls.Add(this.population_counter_label);
+            this.Controls.Add(this.currently_right_value);
+            this.Controls.Add(this.currently_right_label);
+            this.Controls.Add(this.currently_left_value);
+            this.Controls.Add(this.currently_left_label);
+            this.Controls.Add(this.currently_population_value);
+            this.Controls.Add(this.currently_population_label);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
+            this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -175,12 +261,20 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Timer timer3;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label currently_population_label;
+        private System.Windows.Forms.Label currently_population_value;
+        private System.Windows.Forms.Label currently_left_label;
+        private System.Windows.Forms.Label currently_left_value;
+        private System.Windows.Forms.Label currently_right_label;
+        private System.Windows.Forms.Label currently_right_value;
+        private System.Windows.Forms.Timer timer4;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label population_counter_label;
+        private System.Windows.Forms.Label population_counter_value;
+        private System.Windows.Forms.Label right_group_finished_label;
+        private System.Windows.Forms.Label right_group_finished_value;
+        private System.Windows.Forms.Label left_group_finished_label;
+        private System.Windows.Forms.Label left_group_finished_value;
     }
 }
 

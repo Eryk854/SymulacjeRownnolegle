@@ -16,8 +16,11 @@ namespace SymulacjeRownnolegle
     {
         public Population population;
         public int person_spped = 5;
-        public int person_radius = 5;
-        public int start_population = 6;
+        public int person_radius = 10;
+        public int start_population = 5;
+
+        public Graphics main_simulation;
+        public Bitmap main_simulation_bitmap;
 
 
         Random rnd = new Random();
@@ -32,10 +35,19 @@ namespace SymulacjeRownnolegle
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
+            main_simulation_bitmap = new Bitmap(1000, 1000);
+            //panel1.BackgroundImage = bitmap;
+            pictureBox1.Image = main_simulation_bitmap;
+            main_simulation = Graphics.FromImage(main_simulation_bitmap);
+            main_simulation.Clear(Color.White);
+            main_simulation.FillEllipse(Brushes.Blue, 10, 10, 10, 10);
+
+
+
             InitializePeople();
             RecalculatePeoplePositions();
             DrawPopulation();
-            
+
         }
 
         private void RecalculatePeoplePositions()
@@ -47,7 +59,6 @@ namespace SymulacjeRownnolegle
                 {
                     
                     int rand_value = rnd.Next(-person.speed, person.speed + 1);
-                    Console.WriteLine(rand_value);
                     int new_center_y = person.center_y + rand_value;
                     int new_center_x = person.center_x + person.x_direction;
                     Person new_person = new Person(new_center_x, new_center_y, person.radius, person.group);
@@ -63,20 +74,142 @@ namespace SymulacjeRownnolegle
                             person.center_x = new_center_x;
                             person.center_y = new_center_y;
                         }
+                        else
+                        {
+                            Tuple<Person, Person> collision_persons;
+                            collision_persons = new_person.CheckCollisionBetweenPeople1(filterd_persons);
+                            Person person1 = null;
+                            Person person2 = null;
+                            foreach (Person item in this.population.people)
+                            {
+                                if (item.center_x == person.center_x && item.center_y == person.center_y)
+                                    person1 = item;
+                                if (item.center_x == collision_persons.Item2.center_x && item.center_y == collision_persons.Item2.center_y)
+                                    person2 = item;
+                            }
+                            //Person person1 = this.population.people.ElementAt((int)collision_persons.Item1);
+                            //Person person2 = this.population.people.ElementAt((int)collision_persons.Item2);
+
+                            //Person personn1 = new Person(person1.center_x, person1.center_y, person1.radius, person1.group, 1000);
+                            //Person personn2 = new Person(person2.center_x, person2.center_y, person2.radius, person2.group, 1001);
+
+                            //Person personn1 = collision_persons.Item1;
+                            //Person personn2 = collision_persons.Item2;
+                            rand_value = rnd.Next(-person.speed * 2, (person.speed + 1) * 2);
+
+                            //new_center_y = person.center_y + rand_value;
+                            //new_center_x = person.center_x + person.x_direction;
+                            //personn1.center_x = personn1.center_x + personn1.x_direction;
+                            //personn1.center_y = personn1.center_y + rand_value;
+                            //personn2.center_x = personn2.center_x + personn2.x_direction;
+                            //personn2.center_y = personn2.center_y - rand_value;
+
+                            Person personn1 = new Person(person1.center_x, person1.center_y + person1.radius/2 + 1, person1.radius, person1.group);
+                            Person personn2 = new Person(person2.center_x, person2.center_y - person2.radius/2 - 1, person2.radius, person2.group);
+
+
+                            //personn1.center_x = person1.center_x + person1.x_direction;
+                            //personn1.center_y = person1.center_y + rand_value;
+                            //personn2.center_x = person2.center_x + person2.x_direction;
+                            //personn2.center_y = person2.center_y - rand_value;
+
+                            bool wall_collision1 = personn1.CheckCollisionWithWalls();
+                            bool wall_collision2 = personn2.CheckCollisionWithWalls();
+
+                            filtering_query = this.population.people.Where(person_filter => person_filter != person1 && person_filter != person2);
+                            filterd_persons = filtering_query.ToList();
+                            filterd_persons.Add(personn2);
+                            collision = personn1.CheckCollisionBetweenPeople(filterd_persons);
+
+                            filtering_query = this.population.people.Where(person_filter => person_filter != person1 && person_filter != person2);
+                            filterd_persons = filtering_query.ToList();
+                            filterd_persons.Add(personn1);
+                            bool collision1 = personn2.CheckCollisionBetweenPeople(filterd_persons);
+                            Console.WriteLine("##########################");
+                            Console.WriteLine(collision.ToString());
+                            Console.WriteLine(collision1.ToString());
+
+                            if (collision == false && wall_collision1 == false)
+                            {
+                                person1.center_x = personn1.center_x;
+                                person1.center_y = personn1.center_y;
+                            }
+
+                            if (collision1 == false && wall_collision2 == false)
+                            {
+                                person2.center_x = personn2.center_x;
+                                person2.center_y = personn2.center_y;
+                            }
+
+
+                            // cofamy się - działa całkiem nieźle
+                            //rand_value = rnd.Next(-person.speed * 2, (person.speed + 1)*2);
+                            //new_center_y = person.center_y + rand_value;
+                            //new_center_x = person.center_x - person.x_direction;
+                            //new_person = new Person(new_center_x, new_center_y, person.radius, person.group);
+                            //wall_collision = new_person.CheckCollisionWithWalls();
+
+                            //filtering_query = this.population.people.Where(person_filter => person_filter != person);
+                            //filterd_persons = filtering_query.ToList();
+                            //collision = new_person.CheckCollisionBetweenPeople(filterd_persons);
+
+
+                            // sprawdzic odleglosc od srodka do gory i dolu i dodawac po 1 pikselu
+                            //int i = 1;
+                            //int movment;
+                            //if (person.center_y - Global.TopWall > Global.BottomWall - person.center_y)
+                            //    movment = -1;
+                            //else
+                            //    movment = 1;
+                            //new_center_x = person.center_x;
+                            //while (i < 5 || collision == true)
+                            //{
+                            //    new_center_y = person.center_y + movment;
+                            //    new_person = new Person(person.center_x, new_center_y, person.radius, person.group);
+
+                            //    wall_collision = new_person.CheckCollisionWithWalls();
+                            //    filtering_query = this.population.people.Where(person_filter => person_filter != person);
+                            //    filterd_persons = filtering_query.ToList();
+                            //    collision = new_person.CheckCollisionBetweenPeople(filterd_persons);
+                            //    i++;
+                            //}
+
+                            // to podejście działa dobrze ale skacze za bardzo
+                            //int i = 1;
+                            //while ((i < 2 || collision == true))
+                            //{
+                            //    rand_value = rnd.Next(-person.speed * i, (person.speed + 1) * i + person.radius);
+                            //    new_center_y = person.center_y + rand_value;
+                            //    new_center_x = person.center_x + person.x_direction;
+                            //    new_person = new Person(new_center_x, new_center_y, person.radius, person.group);
+
+                            //    wall_collision = new_person.CheckCollisionWithWalls();
+                            //    filtering_query = this.population.people.Where(person_filter => person_filter != person);
+                            //    filterd_persons = filtering_query.ToList();
+                            //    collision = new_person.CheckCollisionBetweenPeople(filterd_persons);
+                            //    i++;
+                            //}
+                            //if (collision == false && wall_collision == false)
+                            //{
+                            //    person.center_x = new_center_x;
+                            //    person.center_y = new_center_y;
+                            //}
+                        }
 
                         if (person.center_x >= person.end_point_x && person.group == "left")
                         {
                             person.status = 0;
                             this.population.population_count -= 1;
-                            this.population.left_group -= 1;
+                            this.population.current_left_group -= 1;
+                            this.population.finished_left_group += 1;
                         }
 
                         if (person.center_x <= person.end_point_x && person.group == "right")
                         {
                             person.status = 0;
                             this.population.population_count -= 1;
-                            this.population.right_group -= 1;
-                            
+                            this.population.current_right_group -= 1;
+                            this.population.finished_right_group += 1;
                         }
                             
                     }
@@ -89,9 +222,12 @@ namespace SymulacjeRownnolegle
         {
             RecalculatePeoplePositions();
             DrawPopulation();
-            label2.Text = this.population.population_count.ToString();
-            label4.Text = this.population.left_group.ToString();
-            label6.Text = this.population.right_group.ToString();
+            currently_population_value.Text = this.population.population_count.ToString();
+            currently_left_value.Text = this.population.current_left_group.ToString();
+            currently_right_value.Text = this.population.current_right_group.ToString();
+            right_group_finished_value.Text = this.population.finished_right_group.ToString();
+            left_group_finished_value.Text = this.population.finished_left_group.ToString();
+            population_counter_value.Text = this.population.population_counter.ToString();
             
         }
 
@@ -99,10 +235,11 @@ namespace SymulacjeRownnolegle
         {
             List<Person> people = new List<Person>();
             Random rnd = new Random();
+
             while(people.Count<this.start_population)
             {
                 int y = rnd.Next(100, 300);
-                Person new_person = new Person(Global.RightEntranceX, y, this.person_radius, "right");
+                Person new_person = new Person(Global.LeftEntranceX, y, this.person_radius, "left");
                 bool start_collision = new_person.CheckCollisionBetweenPeople(people);
                 bool wall_collision = new_person.CheckCollisionWithWalls();
                 
@@ -111,7 +248,8 @@ namespace SymulacjeRownnolegle
             }
             Population population = new Population(people);
             population.population_count = this.start_population;
-            population.left_group = this.start_population;
+            population.current_left_group = this.start_population;
+            population.population_counter = (uint)this.start_population;
             this.population = population;
         }
 
@@ -133,10 +271,11 @@ namespace SymulacjeRownnolegle
                 {
                     this.population.people.Add(new_person);
                     if (new_person.group == "left")
-                        this.population.left_group += 1;
+                        this.population.current_left_group += 1;
                     else
-                        this.population.right_group += 1;
+                        this.population.current_right_group += 1;
                     this.population.population_count += 1;
+                    this.population.population_counter += 1;
                 }
                     
             } 
@@ -169,37 +308,37 @@ namespace SymulacjeRownnolegle
             if(timer1.Enabled)
             {
                 timer1.Enabled = false;
-                //timer3.Enabled = false;
+                timer3.Enabled = false;
             }
             else
             {
                 timer1.Enabled = true;
-                //timer3.Enabled = true;
+                timer3.Enabled = true;
             }
                 
         }
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-            if(this.population.run_simulation)
-                DrawPopulation();
+            //DrawPopulation();
         }
 
         public void DrawPopulation()
         {
-            Graphics g0 = panel1.CreateGraphics();
-            g0.Clear(Color.White);
-            Pen blackPen = new Pen(Color.Black, 20);
-            g0.DrawLine(blackPen, 20, 100, 500, 100);
-            g0.DrawLine(blackPen, 20, 300, 500, 300);
+            //Graphics g0 = panel1.CreateGraphics();
+            //g0.Clear(Color.White);
+            main_simulation.Clear(Color.White);
+            Pen blackPen = new Pen(Color.Black, Global.WallSize);
+            main_simulation.DrawLine(blackPen, Global.LeftEntranceX - 10, Global.TopWall - Global.WallSize, Global.RightEntranceX, Global.TopWall - Global.WallSize);
+            main_simulation.DrawLine(blackPen, Global.LeftEntranceX - 10, Global.BottomWall + Global.WallSize, Global.RightEntranceX, Global.BottomWall+Global.WallSize);
 
             foreach (Person person in this.population.people)
             {
-                if(person.status==1)
-                {
-                    person.DrawPerson(panel1);
-                }
+                if (person.status == 1)
+                    main_simulation.FillEllipse(person.brush, person.center_x - person.radius / 2, person.center_y - person.radius / 2, person.radius * 2, person.radius * 2);
+                
             }
+            pictureBox1.Refresh();
         }
 
         private void timer3_Tick(object sender, EventArgs e)
@@ -209,13 +348,11 @@ namespace SymulacjeRownnolegle
 
         private void button3_Click(object sender, EventArgs e)
         {
-            List<string> fruits =
-                new List<string> { "apple", "passionfruit", "banana", "mango",
-                    "orange", "blueberry", "grape", "strawberry" };
-
-            IEnumerable<string> query = fruits.Where(fruit => fruit.Length < 6);
+            main_simulation.Clear(Color.White);
+            main_simulation.FillEllipse(Brushes.Yellow, 40, 40, 40, 40);
+            
+            pictureBox1.Refresh();
         }
-
     }
     public class Person
     {
@@ -224,6 +361,7 @@ namespace SymulacjeRownnolegle
         public int status;
         public int speed;
         public int x_direction;
+        public Brush brush;
         public string group;
 
         public Person(int center_x, int center_y, int radius, string group)
@@ -240,11 +378,13 @@ namespace SymulacjeRownnolegle
             {
                 this.x_direction = speed;
                 this.end_point_x = Global.RightEntranceX;
+                this.brush = Brushes.Red;
             }
             else
             {
                 this.x_direction = -speed;
                 this.end_point_x = Global.LeftEntranceX;
+                this.brush = Brushes.Green;
             }
             this.end_point_y = rnd.Next(200, 450);
             this.status = 1;
@@ -266,6 +406,23 @@ namespace SymulacjeRownnolegle
             return collision;
         }
 
+        public Tuple<Person, Person> CheckCollisionBetweenPeople1(List<Person> people)
+        {
+            Tuple<Person, Person> result = null;
+            foreach (Person p in people)
+            {
+                if (this != p && p.status == 1)
+                {
+                    double distance = Math.Sqrt(Math.Pow(this.center_x - p.center_x, 2) + Math.Pow(this.center_y - p.center_y, 2));
+                    if (distance <= this.radius + p.radius)
+                        result = Tuple.Create(this, p);
+                }
+            }
+            return result;
+        }
+
+
+
         public bool CheckCollisionWithWalls()
         {
             bool collision = false;
@@ -277,9 +434,8 @@ namespace SymulacjeRownnolegle
 
         public void DrawPerson(Panel panel)
         {
-            Pen pen = new Pen(Color.Red);
             Graphics g0 = panel.CreateGraphics();
-            g0.DrawEllipse(pen, this.center_x - this.radius / 2, this.center_y - this.radius / 2, this.radius * 2, this.radius * 2);
+            g0.FillEllipse(this.brush, this.center_x - this.radius / 2, this.center_y - this.radius / 2, this.radius * 2, this.radius * 2);
         }
     }
 
@@ -287,9 +443,12 @@ namespace SymulacjeRownnolegle
     {
         public List<Person> people;
         public int max_population_count = 30;
+        public uint population_counter = 0;
         public int population_count = 0;
-        public int right_group = 0;
-        public int left_group = 0;
+        public int current_right_group = 0;
+        public int current_left_group = 0;
+        public int finished_right_group = 0;
+        public int finished_left_group = 0;
         public int person_spped = 5;
         public int person_radius = 5;
         public bool run_simulation = false;
@@ -304,6 +463,9 @@ namespace SymulacjeRownnolegle
     {
         private static int _left_entrance_x = 10;
         private static int _right_entrance_x = 500;
+        private static int _top_wall = 100;
+        private static int _bottom_wall = 300;
+        private static int _wall_size = 5;
 
         public static int LeftEntranceX
         {
@@ -314,6 +476,21 @@ namespace SymulacjeRownnolegle
         {
             get { return _right_entrance_x; }
             set { _right_entrance_x = value; }
+        }
+        public static int TopWall
+        {
+            get { return _top_wall; }
+            set { _top_wall = value; }
+        }
+        public static int BottomWall
+        {
+            get { return _bottom_wall; }
+            set { _bottom_wall = value; }
+        }
+        public static int WallSize
+        {
+            get { return _wall_size; }
+            set { _wall_size = value; }
         }
     }
     public class Thread_A
