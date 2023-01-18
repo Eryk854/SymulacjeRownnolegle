@@ -56,14 +56,18 @@
             this.numeric_new_person = new System.Windows.Forms.NumericUpDown();
             this.scroll_new_person = new System.Windows.Forms.HScrollBar();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.numeric_population_speed = new System.Windows.Forms.NumericUpDown();
+            this.scroll_population_speed = new System.Windows.Forms.HScrollBar();
             ((System.ComponentModel.ISupportInitialize)(this.numeric_population_number)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numeric_new_person)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numeric_population_speed)).BeginInit();
             this.SuspendLayout();
             // 
             // recalculation_timer
             // 
-            this.recalculation_timer.Interval = 1;
+            this.recalculation_timer.Interval = 20;
             this.recalculation_timer.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // button1
@@ -216,7 +220,7 @@
             // scroll_population_number
             // 
             this.scroll_population_number.LargeChange = 1;
-            this.scroll_population_number.Location = new System.Drawing.Point(1055, 77);
+            this.scroll_population_number.Location = new System.Drawing.Point(1017, 77);
             this.scroll_population_number.Minimum = 1;
             this.scroll_population_number.Name = "scroll_population_number";
             this.scroll_population_number.Size = new System.Drawing.Size(135, 29);
@@ -226,7 +230,7 @@
             // 
             // numeric_population_number
             // 
-            this.numeric_population_number.Location = new System.Drawing.Point(1055, 52);
+            this.numeric_population_number.Location = new System.Drawing.Point(1017, 52);
             this.numeric_population_number.Minimum = new decimal(new int[] {
             1,
             0,
@@ -245,7 +249,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1066, 17);
+            this.label1.Location = new System.Drawing.Point(1028, 17);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(115, 32);
             this.label1.TabIndex = 21;
@@ -262,7 +266,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1251, 17);
+            this.label2.Location = new System.Drawing.Point(1187, 17);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(89, 32);
             this.label2.TabIndex = 25;
@@ -270,7 +274,7 @@
             // 
             // numeric_new_person
             // 
-            this.numeric_new_person.Location = new System.Drawing.Point(1240, 52);
+            this.numeric_new_person.Location = new System.Drawing.Point(1176, 52);
             this.numeric_new_person.Maximum = new decimal(new int[] {
             2000,
             0,
@@ -294,7 +298,7 @@
             // scroll_new_person
             // 
             this.scroll_new_person.LargeChange = 1;
-            this.scroll_new_person.Location = new System.Drawing.Point(1240, 77);
+            this.scroll_new_person.Location = new System.Drawing.Point(1176, 77);
             this.scroll_new_person.Maximum = 2000;
             this.scroll_new_person.Minimum = 20;
             this.scroll_new_person.Name = "scroll_new_person";
@@ -305,15 +309,62 @@
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(1422, 12);
+            this.panel1.Location = new System.Drawing.Point(1432, 501);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(18, 25);
             this.panel1.TabIndex = 26;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(1344, 17);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(93, 16);
+            this.label3.TabIndex = 29;
+            this.label3.Text = "People speed";
+            // 
+            // numeric_population_speed
+            // 
+            this.numeric_population_speed.Location = new System.Drawing.Point(1333, 52);
+            this.numeric_population_speed.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
+            this.numeric_population_speed.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numeric_population_speed.Name = "numeric_population_speed";
+            this.numeric_population_speed.Size = new System.Drawing.Size(135, 22);
+            this.numeric_population_speed.TabIndex = 5;
+            this.numeric_population_speed.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numeric_population_speed.ValueChanged += new System.EventHandler(this.numeric_population_speed_ValueChanged);
+            // 
+            // scroll_population_speed
+            // 
+            this.scroll_population_speed.LargeChange = 1;
+            this.scroll_population_speed.Location = new System.Drawing.Point(1333, 77);
+            this.scroll_population_speed.Maximum = 200;
+            this.scroll_population_speed.Minimum = 1;
+            this.scroll_population_speed.Name = "scroll_population_speed";
+            this.scroll_population_speed.Size = new System.Drawing.Size(135, 29);
+            this.scroll_population_speed.TabIndex = 2;
+            this.scroll_population_speed.Value = 50;
+            this.scroll_population_speed.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scroll_population_speed_Scroll);
+            // 
             // Form1
             // 
-            this.ClientSize = new System.Drawing.Size(1452, 520);
+            this.ClientSize = new System.Drawing.Size(1491, 520);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.numeric_population_speed);
+            this.Controls.Add(this.scroll_population_speed);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.numeric_new_person);
@@ -341,6 +392,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numeric_population_number)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numeric_new_person)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numeric_population_speed)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -374,6 +426,9 @@
         private System.Windows.Forms.NumericUpDown numeric_new_person;
         private System.Windows.Forms.HScrollBar scroll_new_person;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown numeric_population_speed;
+        private System.Windows.Forms.HScrollBar scroll_population_speed;
     }
 }
 

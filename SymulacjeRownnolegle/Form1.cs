@@ -70,31 +70,11 @@ namespace SymulacjeRownnolegle
                                 if (item.center_x == collision_persons.Item2.center_x && item.center_y == collision_persons.Item2.center_y)
                                     person2 = item;
                             }
-                            //Person person1 = this.population.people.ElementAt((int)collision_persons.Item1);
-                            //Person person2 = this.population.people.ElementAt((int)collision_persons.Item2);
 
-                            //Person personn1 = new Person(person1.center_x, person1.center_y, person1.radius, person1.group, 1000);
-                            //Person personn2 = new Person(person2.center_x, person2.center_y, person2.radius, person2.group, 1001);
-
-                            //Person personn1 = collision_persons.Item1;
-                            //Person personn2 = collision_persons.Item2;
                             rand_value = rnd.Next(-person.speed * 2, (person.speed + 1) * 2);
-
-                            //new_center_y = person.center_y + rand_value;
-                            //new_center_x = person.center_x + person.x_direction;
-                            //personn1.center_x = personn1.center_x + personn1.x_direction;
-                            //personn1.center_y = personn1.center_y + rand_value;
-                            //personn2.center_x = personn2.center_x + personn2.x_direction;
-                            //personn2.center_y = personn2.center_y - rand_value;
 
                             Person personn1 = new Person(person1.center_x, person1.center_y + person1.radius/2 + 1, person1.radius, person1.group);
                             Person personn2 = new Person(person2.center_x, person2.center_y - person2.radius/2 - 1, person2.radius, person2.group);
-
-
-                            //personn1.center_x = person1.center_x + person1.x_direction;
-                            //personn1.center_y = person1.center_y + rand_value;
-                            //personn2.center_x = person2.center_x + person2.x_direction;
-                            //personn2.center_y = person2.center_y - rand_value;
 
                             bool wall_collision1 = personn1.CheckCollisionWithWalls();
                             bool wall_collision2 = personn2.CheckCollisionWithWalls();
@@ -120,60 +100,6 @@ namespace SymulacjeRownnolegle
                                 person2.center_x = personn2.center_x;
                                 person2.center_y = personn2.center_y;
                             }
-
-
-                            // cofamy się - działa całkiem nieźle
-                            //rand_value = rnd.Next(-person.speed * 2, (person.speed + 1)*2);
-                            //new_center_y = person.center_y + rand_value;
-                            //new_center_x = person.center_x - person.x_direction;
-                            //new_person = new Person(new_center_x, new_center_y, person.radius, person.group);
-                            //wall_collision = new_person.CheckCollisionWithWalls();
-
-                            //filtering_query = this.population.people.Where(person_filter => person_filter != person);
-                            //filterd_persons = filtering_query.ToList();
-                            //collision = new_person.CheckCollisionBetweenPeople(filterd_persons);
-
-
-                            // sprawdzic odleglosc od srodka do gory i dolu i dodawac po 1 pikselu
-                            //int i = 1;
-                            //int movment;
-                            //if (person.center_y - Global.TopWall > Global.BottomWall - person.center_y)
-                            //    movment = -1;
-                            //else
-                            //    movment = 1;
-                            //new_center_x = person.center_x;
-                            //while (i < 5 || collision == true)
-                            //{
-                            //    new_center_y = person.center_y + movment;
-                            //    new_person = new Person(person.center_x, new_center_y, person.radius, person.group);
-
-                            //    wall_collision = new_person.CheckCollisionWithWalls();
-                            //    filtering_query = this.population.people.Where(person_filter => person_filter != person);
-                            //    filterd_persons = filtering_query.ToList();
-                            //    collision = new_person.CheckCollisionBetweenPeople(filterd_persons);
-                            //    i++;
-                            //}
-
-                            // to podejście działa dobrze ale skacze za bardzo
-                            //int i = 1;
-                            //while ((i < 2 || collision == true))
-                            //{
-                            //    rand_value = rnd.Next(-person.speed * i, (person.speed + 1) * i + person.radius);
-                            //    new_center_y = person.center_y + rand_value;
-                            //    new_center_x = person.center_x + person.x_direction;
-                            //    new_person = new Person(new_center_x, new_center_y, person.radius, person.group);
-
-                            //    wall_collision = new_person.CheckCollisionWithWalls();
-                            //    filtering_query = this.population.people.Where(person_filter => person_filter != person);
-                            //    filterd_persons = filtering_query.ToList();
-                            //    collision = new_person.CheckCollisionBetweenPeople(filterd_persons);
-                            //    i++;
-                            //}
-                            //if (collision == false && wall_collision == false)
-                            //{
-                            //    person.center_x = new_center_x;
-                            //    person.center_y = new_center_y;
-                            //}
                         }
 
                         if (person.center_x >= person.end_point_x && person.group == "left")
@@ -336,6 +262,7 @@ namespace SymulacjeRownnolegle
         {
             numeric_population_number.Value = 30;
             numeric_new_person.Value = 500;
+            numeric_population_speed.Value = 50;
             initialize_elements();
         }
 
@@ -389,7 +316,21 @@ namespace SymulacjeRownnolegle
             initialize_elements();
         }
 
+        private void numeric_population_speed_ValueChanged(object sender, EventArgs e)
+        {
+            int population_speed = (int)numeric_population_speed.Value;
+            int max_population_speed = (int)numeric_population_speed.Maximum;
+            scroll_population_speed.Value = population_speed;
+            recalculation_timer.Interval = max_population_speed - population_speed+1;
+        }
 
+        private void scroll_population_speed_Scroll(object sender, ScrollEventArgs e)
+        {
+            int population_speed = (int)scroll_population_speed.Value;
+            int max_population_speed = (int)scroll_population_speed.Maximum;
+            numeric_population_speed.Value = population_speed;
+            recalculation_timer.Interval = max_population_speed - population_speed+1;
+        }
     }
     public class Person
     {
