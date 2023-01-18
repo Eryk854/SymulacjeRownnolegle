@@ -29,13 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.recalculation_timer = new System.Windows.Forms.Timer(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.button2 = new System.Windows.Forms.Button();
-            this.timer3 = new System.Windows.Forms.Timer(this.components);
+            this.timer_initialize_new_person = new System.Windows.Forms.Timer(this.components);
             this.button3 = new System.Windows.Forms.Button();
             this.currently_population_label = new System.Windows.Forms.Label();
             this.currently_population_value = new System.Windows.Forms.Label();
@@ -50,36 +48,27 @@
             this.right_group_finished_value = new System.Windows.Forms.Label();
             this.left_group_finished_label = new System.Windows.Forms.Label();
             this.left_group_finished_value = new System.Windows.Forms.Label();
-            this.panel1.SuspendLayout();
+            this.scroll_population_number = new System.Windows.Forms.HScrollBar();
+            this.numeric_population_number = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.numeric_new_person = new System.Windows.Forms.NumericUpDown();
+            this.scroll_new_person = new System.Windows.Forms.HScrollBar();
+            this.panel1 = new System.Windows.Forms.Panel();
+            ((System.ComponentModel.ISupportInitialize)(this.numeric_population_number)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numeric_new_person)).BeginInit();
             this.SuspendLayout();
             // 
-            // panel1
+            // recalculation_timer
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1030, 518);
-            this.panel1.TabIndex = 0;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(0, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1000, 1000);
-            this.pictureBox1.TabIndex = 12;
-            this.pictureBox1.TabStop = false;
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 50;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.recalculation_timer.Interval = 1;
+            this.recalculation_timer.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1203, 42);
+            this.button1.Location = new System.Drawing.Point(1333, 168);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -90,30 +79,29 @@
             // timer2
             // 
             this.timer2.Interval = 50;
-            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1194, 106);
+            this.button2.Location = new System.Drawing.Point(1180, 183);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(83, 30);
+            this.button2.Size = new System.Drawing.Size(115, 30);
             this.button2.TabIndex = 2;
-            this.button2.Text = "button2";
+            this.button2.Text = "Start simulation";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // timer3
+            // timer_initialize_new_person
             // 
-            this.timer3.Interval = 1000;
-            this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
+            this.timer_initialize_new_person.Interval = 1000;
+            this.timer_initialize_new_person.Tick += new System.EventHandler(this.timer3_Tick);
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(1193, 163);
+            this.button3.Location = new System.Drawing.Point(1069, 182);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(83, 32);
             this.button3.TabIndex = 3;
-            this.button3.Text = "button3";
+            this.button3.Text = "Reset simulation";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -225,9 +213,115 @@
             this.left_group_finished_value.TabIndex = 17;
             this.left_group_finished_value.Text = "Start simulation \r\nto see results";
             // 
+            // scroll_population_number
+            // 
+            this.scroll_population_number.LargeChange = 1;
+            this.scroll_population_number.Location = new System.Drawing.Point(1055, 77);
+            this.scroll_population_number.Minimum = 1;
+            this.scroll_population_number.Name = "scroll_population_number";
+            this.scroll_population_number.Size = new System.Drawing.Size(135, 29);
+            this.scroll_population_number.TabIndex = 18;
+            this.scroll_population_number.Value = 30;
+            this.scroll_population_number.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar1_Scroll);
+            // 
+            // numeric_population_number
+            // 
+            this.numeric_population_number.Location = new System.Drawing.Point(1055, 52);
+            this.numeric_population_number.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numeric_population_number.Name = "numeric_population_number";
+            this.numeric_population_number.Size = new System.Drawing.Size(135, 22);
+            this.numeric_population_number.TabIndex = 20;
+            this.numeric_population_number.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            this.numeric_population_number.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(1066, 17);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(115, 32);
+            this.label1.TabIndex = 21;
+            this.label1.Text = "Maximum number \r\nof people";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(1000, 1000);
+            this.pictureBox1.TabIndex = 22;
+            this.pictureBox1.TabStop = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(1251, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(89, 32);
+            this.label2.TabIndex = 25;
+            this.label2.Text = "Speed of new\r\npeople";
+            // 
+            // numeric_new_person
+            // 
+            this.numeric_new_person.Location = new System.Drawing.Point(1240, 52);
+            this.numeric_new_person.Maximum = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
+            this.numeric_new_person.Minimum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numeric_new_person.Name = "numeric_new_person";
+            this.numeric_new_person.Size = new System.Drawing.Size(135, 22);
+            this.numeric_new_person.TabIndex = 10;
+            this.numeric_new_person.Value = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.numeric_new_person.ValueChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
+            // 
+            // scroll_new_person
+            // 
+            this.scroll_new_person.LargeChange = 1;
+            this.scroll_new_person.Location = new System.Drawing.Point(1240, 77);
+            this.scroll_new_person.Maximum = 2000;
+            this.scroll_new_person.Minimum = 20;
+            this.scroll_new_person.Name = "scroll_new_person";
+            this.scroll_new_person.Size = new System.Drawing.Size(135, 29);
+            this.scroll_new_person.TabIndex = 10;
+            this.scroll_new_person.Value = 500;
+            this.scroll_new_person.ValueChanged += new System.EventHandler(this.hScrollBar2_ValueChanged);
+            // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(1422, 12);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(18, 25);
+            this.panel1.TabIndex = 26;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1452, 520);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.numeric_new_person);
+            this.Controls.Add(this.scroll_new_person);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.numeric_population_number);
+            this.Controls.Add(this.scroll_population_number);
             this.Controls.Add(this.left_group_finished_value);
             this.Controls.Add(this.left_group_finished_label);
             this.Controls.Add(this.right_group_finished_value);
@@ -243,23 +337,21 @@
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.panel1);
             this.Name = "Form1";
-            this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numeric_population_number)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numeric_new_person)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer recalculation_timer;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Timer timer3;
+        private System.Windows.Forms.Timer timer_initialize_new_person;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Label currently_population_label;
         private System.Windows.Forms.Label currently_population_value;
@@ -268,13 +360,20 @@
         private System.Windows.Forms.Label currently_right_label;
         private System.Windows.Forms.Label currently_right_value;
         private System.Windows.Forms.Timer timer4;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label population_counter_label;
         private System.Windows.Forms.Label population_counter_value;
         private System.Windows.Forms.Label right_group_finished_label;
         private System.Windows.Forms.Label right_group_finished_value;
         private System.Windows.Forms.Label left_group_finished_label;
         private System.Windows.Forms.Label left_group_finished_value;
+        private System.Windows.Forms.HScrollBar scroll_population_number;
+        private System.Windows.Forms.NumericUpDown numeric_population_number;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown numeric_new_person;
+        private System.Windows.Forms.HScrollBar scroll_new_person;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

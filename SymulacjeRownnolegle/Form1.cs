@@ -33,23 +33,6 @@ namespace SymulacjeRownnolegle
         }
 
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-            main_simulation_bitmap = new Bitmap(1000, 1000);
-            //panel1.BackgroundImage = bitmap;
-            pictureBox1.Image = main_simulation_bitmap;
-            main_simulation = Graphics.FromImage(main_simulation_bitmap);
-            main_simulation.Clear(Color.White);
-            main_simulation.FillEllipse(Brushes.Blue, 10, 10, 10, 10);
-
-
-
-            InitializePeople();
-            RecalculatePeoplePositions();
-            DrawPopulation();
-
-        }
-
         private void RecalculatePeoplePositions()
         {
             
@@ -125,9 +108,6 @@ namespace SymulacjeRownnolegle
                             filterd_persons = filtering_query.ToList();
                             filterd_persons.Add(personn1);
                             bool collision1 = personn2.CheckCollisionBetweenPeople(filterd_persons);
-                            Console.WriteLine("##########################");
-                            Console.WriteLine(collision.ToString());
-                            Console.WriteLine(collision1.ToString());
 
                             if (collision == false && wall_collision1 == false)
                             {
@@ -213,7 +193,6 @@ namespace SymulacjeRownnolegle
                         }
                             
                     }
-                    //if ((100 < new_center_y - person.radius) && (new_center_y + person.radius < 300) ) // && (person.start_y - 25 < new_center_y) && (person.start_y + 25 > new_center_y)
                 }
             }
         }
@@ -234,21 +213,34 @@ namespace SymulacjeRownnolegle
         private void InitializePeople()
         {
             List<Person> people = new List<Person>();
-            Random rnd = new Random();
-
-            while(people.Count<this.start_population)
+            int init_left_group = 0;
+            int init_right_group = 0;
+            while (people.Count < this.start_population)
             {
-                int y = rnd.Next(100, 300);
-                Person new_person = new Person(Global.LeftEntranceX, y, this.person_radius, "left");
+                int group_loss = this.rnd.Next(0, 2);
+                int y = rnd.Next(Global.TopWall, Global.BottomWall);
+                Person new_person;
+                if (group_loss == 0)
+                    new_person = new Person(Global.LeftEntranceX, y, this.person_radius, "left");
+                else
+                    new_person = new Person(Global.RightEntranceX, y, this.person_radius, "right");
                 bool start_collision = new_person.CheckCollisionBetweenPeople(people);
                 bool wall_collision = new_person.CheckCollisionWithWalls();
-                
-                if(!start_collision && ! wall_collision)
+
+                if (!start_collision && !wall_collision)
+                {
                     people.Add(new_person);
+                    if (new_person.group == "left")
+                        init_left_group += 1;
+                    else
+                        init_right_group += 1;
+                }
             }
-            Population population = new Population(people);
+            Population population = new Population();
+            population.people = people;
             population.population_count = this.start_population;
-            population.current_left_group = this.start_population;
+            population.current_left_group = init_left_group;
+            population.current_right_group = init_right_group;
             population.population_counter = (uint)this.start_population;
             this.population = population;
         }
@@ -258,7 +250,7 @@ namespace SymulacjeRownnolegle
             if(this.population.population_count < this.population.max_population_count)
             {
                 int group_loss = this.rnd.Next(0, 2);
-                int y = this.rnd.Next(100, 300);
+                int y = this.rnd.Next(Global.TopWall, Global.BottomWall);
                 Person new_person;
                 if(group_loss==0)
                     new_person = new Person(Global.LeftEntranceX, y, this.person_radius, "left");
@@ -276,57 +268,51 @@ namespace SymulacjeRownnolegle
                         this.population.current_right_group += 1;
                     this.population.population_count += 1;
                     this.population.population_counter += 1;
-                }
-                    
+                }    
             } 
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             
-            if(thread_a == null)
-            {
-                this.population.run_simulation = true;
-                thread_object_a = new Thread_A(this.population, this.panel1);
-                thread_start_a = new ThreadStart(thread_object_a.RedrawPeople);
-                thread_a = new Thread(thread_start_a);
-                timer2.Enabled = true;
-                button1.Text = "Stop simulation";
-                thread_a.Start();
+            //if(thread_a == null)
+            //{
+            //    this.population.run_simulation = true;
+            //    thread_object_a = new Thread_A(this.population, this.panel1);
+            //    thread_start_a = new ThreadStart(thread_object_a.RedrawPeople);
+            //    thread_a = new Thread(thread_start_a);
+            //    timer2.Enabled = true;
+            //    button1.Text = "Stop simulation";
+            //    thread_a.Start();
 
-            }
-            else
-            {
-                this.population.run_simulation = false;
-                thread_a.Join();
-                thread_a.Interrupt();
-            }
+            //}
+            //else
+            //{
+            //    this.population.run_simulation = false;
+            //    thread_a.Join();
+            //    thread_a.Interrupt();
+            //}
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if(timer1.Enabled)
+            if(recalculation_timer.Enabled)
             {
-                timer1.Enabled = false;
-                timer3.Enabled = false;
+                recalculation_timer.Enabled = false;
+                timer_initialize_new_person.Enabled = false;
+                button2.Text = "Rerun simulation";
             }
             else
             {
-                timer1.Enabled = true;
-                timer3.Enabled = true;
+                recalculation_timer.Enabled = true;
+                timer_initialize_new_person.Enabled = true;
+                button2.Text = "Stop simulation";
             }
                 
         }
 
-        private void timer2_Tick(object sender, EventArgs e)
-        {
-            //DrawPopulation();
-        }
-
         public void DrawPopulation()
         {
-            //Graphics g0 = panel1.CreateGraphics();
-            //g0.Clear(Color.White);
             main_simulation.Clear(Color.White);
             Pen blackPen = new Pen(Color.Black, Global.WallSize);
             main_simulation.DrawLine(blackPen, Global.LeftEntranceX - 10, Global.TopWall - Global.WallSize, Global.RightEntranceX, Global.TopWall - Global.WallSize);
@@ -348,11 +334,62 @@ namespace SymulacjeRownnolegle
 
         private void button3_Click(object sender, EventArgs e)
         {
-            main_simulation.Clear(Color.White);
-            main_simulation.FillEllipse(Brushes.Yellow, 40, 40, 40, 40);
-            
-            pictureBox1.Refresh();
+            numeric_population_number.Value = 30;
+            numeric_new_person.Value = 500;
+            initialize_elements();
         }
+
+        private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+            int new_population_count = (int)scroll_population_number.Value;
+            numeric_population_number.Value = new_population_count;
+            this.population.max_population_count = new_population_count;
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            int new_population_count = (int)numeric_population_number.Value;
+            scroll_population_number.Value =new_population_count;
+            this.population.max_population_count = new_population_count;
+        }
+
+
+        private void numericUpDown2_ValueChanged(object sender, EventArgs e)
+        {
+            int new_person_interval = (int)numeric_new_person.Value;
+            scroll_new_person.Value = new_person_interval;
+            timer_initialize_new_person.Interval = new_person_interval;
+        }
+
+        private void hScrollBar2_ValueChanged(object sender, EventArgs e)
+        {
+            int new_person_interval = (int)scroll_new_person.Value;
+            numeric_new_person.Value = new_person_interval;
+            timer_initialize_new_person.Interval = new_person_interval;
+        }
+
+        public void initialize_elements()
+        {
+            main_simulation_bitmap = new Bitmap(1000, 1000);
+            pictureBox1.Image = main_simulation_bitmap;
+            main_simulation = Graphics.FromImage(main_simulation_bitmap);
+            main_simulation.Clear(Color.White);
+
+            Pen blackPen = new Pen(Color.Black, Global.WallSize);
+            main_simulation.DrawLine(blackPen, Global.LeftEntranceX - 10, Global.TopWall - Global.WallSize, Global.RightEntranceX, Global.TopWall - Global.WallSize);
+            main_simulation.DrawLine(blackPen, Global.LeftEntranceX - 10, Global.BottomWall + Global.WallSize, Global.RightEntranceX, Global.BottomWall + Global.WallSize);
+
+            InitializePeople();
+            RecalculatePeoplePositions();
+            DrawPopulation();
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            initialize_elements();
+        }
+
+
     }
     public class Person
     {
@@ -441,7 +478,7 @@ namespace SymulacjeRownnolegle
 
     public class Population
     {
-        public List<Person> people;
+        public List<Person> people = new List <Person>();
         public int max_population_count = 30;
         public uint population_counter = 0;
         public int population_count = 0;
@@ -452,11 +489,6 @@ namespace SymulacjeRownnolegle
         public int person_spped = 5;
         public int person_radius = 5;
         public bool run_simulation = false;
-
-        public Population(List<Person> people)
-        {
-            this.people= people;
-        }
     }
 
     static class Global
