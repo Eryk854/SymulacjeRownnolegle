@@ -176,19 +176,24 @@ namespace SymulacjeRownnolegle
         {
             if(this.population.population_count < this.population.max_population_count)
             {
-                int group_loss = this.rnd.Next(0, 2);
-                int y = this.rnd.Next(Global.TopWall, Global.BottomWall);
-                Person new_person;
-                if(group_loss==0)
-                    new_person = new Person(Global.LeftEntranceX, y, this.person_radius, "left");
-                else
-                    new_person = new Person(Global.RightEntranceX, y, this.person_radius, "right");
-                bool start_collision = new_person.CheckCollisionBetweenPeople(this.population.people);
-                bool wall_collision = new_person.CheckCollisionWithWalls();
-
-                if (!start_collision && !wall_collision)
+                lock (LockCount)
                 {
-                    lock (LockCount)
+                    int group_loss = this.rnd.Next(0, 2);
+                    int y = this.rnd.Next(Global.TopWall, Global.BottomWall);
+                    Person new_person;
+                    if (group_loss == 0)
+                        new_person = new Person(Global.LeftEntranceX, y, this.person_radius, "left");
+                    else
+                        new_person = new Person(Global.RightEntranceX, y, this.person_radius, "right");
+                    bool start_collision = new_person.CheckCollisionBetweenPeople(this.population.people);
+                    bool wall_collision = new_person.CheckCollisionWithWalls();
+
+                    if (start_collision)
+                    {
+                        Console.WriteLine("Start collision");
+                    }
+
+                    if (!start_collision && !wall_collision)
                     {
                         this.population.people.Add(new_person);
                         if (new_person.group == "left")
@@ -198,7 +203,7 @@ namespace SymulacjeRownnolegle
                         this.population.population_count += 1;
                         this.population.population_counter += 1;
                     }
-                }    
+                }
             } 
         }
 
@@ -220,6 +225,10 @@ namespace SymulacjeRownnolegle
                 timer_paraller_simulation_display.Enabled = true;
                 timer_initialize_new_person.Enabled = true;
                 button1.Text = "Stop simulation";
+                button2.Enabled = false;
+                button3.Enabled = false;
+                numeric_population_speed.Enabled = false;
+                scroll_population_speed.Enabled = false;
                 thread_b.Start();
                 thread_a.Start();
 
@@ -228,11 +237,18 @@ namespace SymulacjeRownnolegle
             else
             {
                 this.population.run_simulation = false;
+                timer_paraller_simulation_display.Enabled = false;
+                timer_initialize_new_person.Enabled = false;
+                button3.Enabled = true;
+                button1.Text = "Rerun paraller simulation";
+
                 thread_a.Join();
-                
                 thread_b.Join();
                 thread_b.Interrupt();
                 thread_a.Interrupt();
+                thread_a = null;
+                thread_b = null;
+
             }
         }
 
@@ -278,8 +294,26 @@ namespace SymulacjeRownnolegle
         {
             numeric_population_number.Value = 30;
             numeric_new_person.Value = 500;
-            numeric_population_speed.Value = 50;
+            numeric_population_speed.Value = 150;
+            recalculation_timer.Enabled = false;
+            timer_initialize_new_person.Enabled = false;
+            button1.Text = "Start paraller simulation";
+            button2.Text = "Sart simulation";
+            button2.Enabled = true;
+            numeric_population_speed.Enabled = true;
+            scroll_population_speed.Enabled = true;
             initialize_elements();
+            update_simulation_results(); 
+        }
+
+        private void update_simulation_results()
+        {
+            currently_population_value.Text = this.population.population_count.ToString();
+            currently_left_value.Text = this.population.current_left_group.ToString();
+            currently_right_value.Text = this.population.current_right_group.ToString();
+            right_group_finished_value.Text = this.population.finished_right_group.ToString();
+            left_group_finished_value.Text = this.population.finished_left_group.ToString();
+            population_counter_value.Text = this.population.population_counter.ToString();
         }
 
         private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
@@ -299,15 +333,17 @@ namespace SymulacjeRownnolegle
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
         {
             int new_person_interval = (int)numeric_new_person.Value;
+            int new_person_max = (int)numeric_new_person.Maximum;
             scroll_new_person.Value = new_person_interval;
-            timer_initialize_new_person.Interval = new_person_interval;
+            timer_initialize_new_person.Interval = new_person_max - new_person_interval + 1;
         }
 
         private void hScrollBar2_ValueChanged(object sender, EventArgs e)
         {
             int new_person_interval = (int)scroll_new_person.Value;
+            int new_person_max = (int)numeric_new_person.Maximum;
             numeric_new_person.Value = new_person_interval;
-            timer_initialize_new_person.Interval = new_person_interval;
+            timer_initialize_new_person.Interval = new_person_max - new_person_interval + 1;
         }
 
         public void initialize_elements()
@@ -352,6 +388,7 @@ namespace SymulacjeRownnolegle
             if(this.population.run_simulation)
             {
                 DrawPopulation();
+                update_simulation_results();
             }
         }
     }
@@ -681,7 +718,7 @@ namespace SymulacjeRownnolegle
                             }
                         }
                     }
-                    System.Threading.Thread.Sleep(1000);
+                    System.Threading.Thread.Sleep(1);
                 }
             }
         }
