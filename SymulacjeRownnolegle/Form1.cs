@@ -17,7 +17,7 @@ namespace SymulacjeRownnolegle
         public Population population;
         public int person_spped = 5;
         public int person_radius = 10;
-        public int start_population = 5;
+        public int start_population = 10;
 
         public Graphics main_simulation;
         public Bitmap main_simulation_bitmap;
@@ -112,37 +112,6 @@ namespace SymulacjeRownnolegle
                                 person2.center_x = personn2.center_x;
                                 person2.center_y = personn2.center_y;
                             }
-
-                            //if((collision == true || wall_collision1 == true) && (collision1 == true || wall_collision2 == true))
-                            //{
-                            //    personn1 = new Person(person1.center_x, person1.center_y + (person1.radius) + 1, person1.radius, person1.group);
-                            //    personn2 = new Person(person2.center_x, person2.center_y - (person2.radius) - 1, person2.radius, person2.group);
-
-                            //    wall_collision1 = personn1.CheckCollisionWithWalls();
-                            //    wall_collision2 = personn2.CheckCollisionWithWalls();
-
-                            //    filtering_query = this.population.people.Where(person_filter => person_filter != person1 && person_filter != person2);
-                            //    filterd_persons = filtering_query.ToList();
-                            //    filterd_persons.Add(personn2);
-                            //    collision = personn1.CheckCollisionBetweenPeople(filterd_persons);
-
-                            //    filtering_query = this.population.people.Where(person_filter => person_filter != person1 && person_filter != person2);
-                            //    filterd_persons = filtering_query.ToList();
-                            //    filterd_persons.Add(personn1);
-                            //    collision1 = personn2.CheckCollisionBetweenPeople(filterd_persons);
-
-                            //    if (collision == false && wall_collision1 == false)
-                            //    {
-                            //        person1.center_x = personn1.center_x;
-                            //        person1.center_y = personn1.center_y;
-                            //    }
-
-                            //    if (collision1 == false && wall_collision2 == false)
-                            //    {
-                            //        person2.center_x = personn2.center_x;
-                            //        person2.center_y = personn2.center_y;
-                            //    }
-                            //}
                         }
 
                         if (person.center_x >= person.end_point_x && person.group == "left")
@@ -269,8 +238,6 @@ namespace SymulacjeRownnolegle
                 scroll_population_speed.Enabled = false;
                 thread_b.Start();
                 thread_a.Start();
-
-
             }
             else
             {
@@ -311,8 +278,15 @@ namespace SymulacjeRownnolegle
         {
             main_simulation.Clear(Color.White);
             Pen blackPen = new Pen(Color.Black, Global.WallSize);
-            main_simulation.DrawLine(blackPen, Global.LeftEntranceX - 10, Global.TopWall - Global.WallSize, Global.RightEntranceX, Global.TopWall - Global.WallSize);
-            main_simulation.DrawLine(blackPen, Global.LeftEntranceX - 10, Global.BottomWall + Global.WallSize, Global.RightEntranceX, Global.BottomWall+Global.WallSize);
+            Pen dashedPen = new Pen(Color.Gray, Global.WallSize);
+            float[] dashes = { 5, 2 };
+            dashedPen.DashPattern = dashes;
+            main_simulation.DrawLine(blackPen, Global.LeftEntranceX - 50, Global.TopWall - Global.WallSize, Global.RightEntranceX + 50, Global.TopWall - Global.WallSize);
+            main_simulation.DrawLine(blackPen, Global.LeftEntranceX - 50, Global.BottomWall + Global.WallSize, Global.RightEntranceX + 50, Global.BottomWall+Global.WallSize);
+            main_simulation.DrawLine(dashedPen, Global.LeftEntranceX - Global.WallSize, Global.TopWall - Global.WallSize, Global.LeftEntranceX - Global.WallSize, Global.BottomWall + Global.WallSize);
+            main_simulation.DrawLine(dashedPen, Global.RightEntranceX + Global.WallSize, Global.TopWall - Global.WallSize, Global.RightEntranceX + Global.WallSize, Global.BottomWall + Global.WallSize);
+            main_simulation.DrawString("Entrance A", new Font("Arial", 16), new SolidBrush(Color.Black), Global.LeftEntranceX - 50, Global.TopWall - Global.WallSize);
+            main_simulation.DrawString("Entrance B", new Font("Arial", 16), new SolidBrush(Color.Black), Global.RightEntranceX + 30, Global.TopWall - Global.WallSize);
 
             foreach (Person person in this.population.people)
             {
@@ -527,7 +501,7 @@ namespace SymulacjeRownnolegle
         private static int _left_entrance_x = 50;
         private static int _right_entrance_x = 750;
         private static int _top_wall = 100;
-        private static int _bottom_wall = 300;
+        private static int _bottom_wall = 450;
         private static int _wall_size = 5;
 
         public static int LeftEntranceX
