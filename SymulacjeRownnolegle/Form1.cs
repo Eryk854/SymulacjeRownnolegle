@@ -15,10 +15,6 @@ namespace SymulacjeRownnolegle
     public partial class Form1 : Form
     {
         public Population population;
-        public int person_spped = 5;
-        public int person_radius = 10;
-        public int start_population = 10;
-
         public Graphics main_simulation;
         public Bitmap main_simulation_bitmap;
 
@@ -32,6 +28,7 @@ namespace SymulacjeRownnolegle
         Thread_B thread_object_b;
         ThreadStart thread_start_b;
         Thread thread_b;
+
         public Form1()
         {
             InitializeComponent();
@@ -72,8 +69,6 @@ namespace SymulacjeRownnolegle
                                 if (item.center_x == collision_persons.Item2.center_x && item.center_y == collision_persons.Item2.center_y)
                                     person2 = item;
                             }
-
-                            rand_value = rnd.Next(-person.speed * 2, (person.speed + 1) * 2);
 
                             Person personn1, personn2;
                             if (person1.center_y > person2.center_y)
@@ -154,15 +149,15 @@ namespace SymulacjeRownnolegle
             List<Person> people = new List<Person>();
             int init_left_group = 0;
             int init_right_group = 0;
-            while (people.Count < this.start_population)
+            while (people.Count < Global.StartPopulation)
             {
                 int group_loss = this.rnd.Next(0, 2);
                 int y = rnd.Next(Global.TopWall, Global.BottomWall);
                 Person new_person;
                 if (group_loss == 0)
-                    new_person = new Person(Global.LeftEntranceX, y, this.person_radius, "left");
+                    new_person = new Person(Global.LeftEntranceX, y, Global.PersonRadius, "left");
                 else
-                    new_person = new Person(Global.RightEntranceX, y, this.person_radius, "right");
+                    new_person = new Person(Global.RightEntranceX, y, Global.PersonRadius, "right");
                 bool start_collision = new_person.CheckCollisionBetweenPeople(people);
                 bool wall_collision = new_person.CheckCollisionWithWalls();
 
@@ -177,10 +172,10 @@ namespace SymulacjeRownnolegle
             }
             Population population = new Population();
             population.people = people;
-            population.population_count = this.start_population;
+            population.population_count = Global.StartPopulation;
             population.current_left_group = init_left_group;
             population.current_right_group = init_right_group;
-            population.population_counter = (uint)this.start_population;
+            population.population_counter = (uint)Global.StartPopulation;
             this.population = population;
         }
 
@@ -194,9 +189,9 @@ namespace SymulacjeRownnolegle
                     int y = this.rnd.Next(Global.TopWall, Global.BottomWall);
                     Person new_person;
                     if (group_loss == 0)
-                        new_person = new Person(Global.LeftEntranceX, y, this.person_radius, "left");
+                        new_person = new Person(Global.LeftEntranceX, y, Global.PersonRadius, "left");
                     else
-                        new_person = new Person(Global.RightEntranceX, y, this.person_radius, "right");
+                        new_person = new Person(Global.RightEntranceX, y, Global.PersonRadius, "right");
                     bool start_collision = new_person.CheckCollisionBetweenPeople(this.population.people);
                     bool wall_collision = new_person.CheckCollisionWithWalls();
 
@@ -270,6 +265,7 @@ namespace SymulacjeRownnolegle
                 recalculation_timer.Enabled = true;
                 timer_initialize_new_person.Enabled = true;
                 button2.Text = "Stop simulation";
+                button1.Enabled = false;
             }
                 
         }
@@ -312,6 +308,7 @@ namespace SymulacjeRownnolegle
             button1.Text = "Start paraller simulation";
             button2.Text = "Sart simulation";
             button2.Enabled = true;
+            button1.Enabled = true;
             numeric_population_speed.Enabled = true;
             scroll_population_speed.Enabled = true;
             initialize_elements();
@@ -491,8 +488,6 @@ namespace SymulacjeRownnolegle
         public int current_left_group = 0;
         public int finished_right_group = 0;
         public int finished_left_group = 0;
-        public int person_spped = 5;
-        public int person_radius = 5;
         public bool run_simulation = false;
     }
 
@@ -503,6 +498,8 @@ namespace SymulacjeRownnolegle
         private static int _top_wall = 100;
         private static int _bottom_wall = 450;
         private static int _wall_size = 5;
+        private static int _person_radius = 10;
+        private static int _start_population = 10;
 
         public static int LeftEntranceX
         {
@@ -528,6 +525,16 @@ namespace SymulacjeRownnolegle
         {
             get { return _wall_size; }
             set { _wall_size = value; }
+        }
+        public static int PersonRadius
+        {
+            get { return _person_radius; }
+            set { _person_radius = value; }
+        }
+        public static int StartPopulation
+        {
+            get { return _start_population; }
+            set { _start_population = value; }
         }
     }
     public class Thread_A
@@ -578,10 +585,18 @@ namespace SymulacjeRownnolegle
                                             person2 = item;
                                     }
 
-                                    rand_value = rnd.Next(-person.speed * 2, (person.speed + 1) * 2);
+                                    Person personn1, personn2;
+                                    if (person1.center_y > person2.center_y)
+                                    {
+                                        personn1 = new Person(person1.center_x, person1.center_y + person1.radius / 2 + 1, person1.radius, person1.group);
+                                        personn2 = new Person(person2.center_x, person2.center_y - person2.radius / 2 - 1, person2.radius, person2.group);
+                                    }
+                                    else
+                                    {
+                                        personn1 = new Person(person1.center_x, person1.center_y - person1.radius / 2 + 1, person1.radius, person1.group);
+                                        personn2 = new Person(person2.center_x, person2.center_y + person2.radius / 2 - 1, person2.radius, person2.group);
+                                    }
 
-                                    Person personn1 = new Person(person1.center_x, person1.center_y + person1.radius / 2 + 1, person1.radius, person1.group);
-                                    Person personn2 = new Person(person2.center_x, person2.center_y - person2.radius / 2 - 1, person2.radius, person2.group);
 
                                     bool wall_collision1 = personn1.CheckCollisionWithWalls();
                                     bool wall_collision2 = personn2.CheckCollisionWithWalls();
@@ -611,6 +626,7 @@ namespace SymulacjeRownnolegle
 
                                 if (person.center_x >= person.end_point_x && person.group == "left")
                                 {
+                                    // osoba dotarła do wyjścia prawego
                                     person.status = 0;
                                     this.population.population_count -= 1;
                                     this.population.current_left_group -= 1;
@@ -619,6 +635,7 @@ namespace SymulacjeRownnolegle
 
                                 if (person.center_x <= person.end_point_x && person.group == "right")
                                 {
+                                    // osoba dotarła do wyjścia lewego
                                     person.status = 0;
                                     this.population.population_count -= 1;
                                     this.population.current_right_group -= 1;
@@ -628,7 +645,7 @@ namespace SymulacjeRownnolegle
                         }
                     }
                 }
-            } 
+            }
         }
     }
 
@@ -680,10 +697,18 @@ namespace SymulacjeRownnolegle
                                             person2 = item;
                                     }
 
-                                    rand_value = rnd.Next(-person.speed * 2, (person.speed + 1) * 2);
+                                    Person personn1, personn2;
+                                    if (person1.center_y > person2.center_y)
+                                    {
+                                        personn1 = new Person(person1.center_x, person1.center_y + person1.radius / 2 + 1, person1.radius, person1.group);
+                                        personn2 = new Person(person2.center_x, person2.center_y - person2.radius / 2 - 1, person2.radius, person2.group);
+                                    }
+                                    else
+                                    {
+                                        personn1 = new Person(person1.center_x, person1.center_y - person1.radius / 2 + 1, person1.radius, person1.group);
+                                        personn2 = new Person(person2.center_x, person2.center_y + person2.radius / 2 - 1, person2.radius, person2.group);
+                                    }
 
-                                    Person personn1 = new Person(person1.center_x, person1.center_y + person1.radius / 2 + 1, person1.radius, person1.group);
-                                    Person personn2 = new Person(person2.center_x, person2.center_y - person2.radius / 2 - 1, person2.radius, person2.group);
 
                                     bool wall_collision1 = personn1.CheckCollisionWithWalls();
                                     bool wall_collision2 = personn2.CheckCollisionWithWalls();
@@ -713,6 +738,7 @@ namespace SymulacjeRownnolegle
 
                                 if (person.center_x >= person.end_point_x && person.group == "left")
                                 {
+                                    // osoba dotarła do wyjścia prawego
                                     person.status = 0;
                                     this.population.population_count -= 1;
                                     this.population.current_left_group -= 1;
@@ -721,6 +747,7 @@ namespace SymulacjeRownnolegle
 
                                 if (person.center_x <= person.end_point_x && person.group == "right")
                                 {
+                                    // osoba dotarła do wyjścia lewego
                                     person.status = 0;
                                     this.population.population_count -= 1;
                                     this.population.current_right_group -= 1;
