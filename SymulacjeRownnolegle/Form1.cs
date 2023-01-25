@@ -75,8 +75,18 @@ namespace SymulacjeRownnolegle
 
                             rand_value = rnd.Next(-person.speed * 2, (person.speed + 1) * 2);
 
-                            Person personn1 = new Person(person1.center_x, person1.center_y + person1.radius/2 + 1, person1.radius, person1.group);
-                            Person personn2 = new Person(person2.center_x, person2.center_y - person2.radius/2 - 1, person2.radius, person2.group);
+                            Person personn1, personn2;
+                            if (person1.center_y > person2.center_y)
+                            {
+                                personn1 = new Person(person1.center_x, person1.center_y + person1.radius / 2 + 1, person1.radius, person1.group);
+                                personn2 = new Person(person2.center_x, person2.center_y - person2.radius / 2 - 1, person2.radius, person2.group);
+                            }
+                            else
+                            {
+                                personn1 = new Person(person1.center_x, person1.center_y - person1.radius / 2 + 1, person1.radius, person1.group);
+                                personn2 = new Person(person2.center_x, person2.center_y + person2.radius / 2 - 1, person2.radius, person2.group);
+                            }
+
 
                             bool wall_collision1 = personn1.CheckCollisionWithWalls();
                             bool wall_collision2 = personn2.CheckCollisionWithWalls();
@@ -102,10 +112,42 @@ namespace SymulacjeRownnolegle
                                 person2.center_x = personn2.center_x;
                                 person2.center_y = personn2.center_y;
                             }
+
+                            //if((collision == true || wall_collision1 == true) && (collision1 == true || wall_collision2 == true))
+                            //{
+                            //    personn1 = new Person(person1.center_x, person1.center_y + (person1.radius) + 1, person1.radius, person1.group);
+                            //    personn2 = new Person(person2.center_x, person2.center_y - (person2.radius) - 1, person2.radius, person2.group);
+
+                            //    wall_collision1 = personn1.CheckCollisionWithWalls();
+                            //    wall_collision2 = personn2.CheckCollisionWithWalls();
+
+                            //    filtering_query = this.population.people.Where(person_filter => person_filter != person1 && person_filter != person2);
+                            //    filterd_persons = filtering_query.ToList();
+                            //    filterd_persons.Add(personn2);
+                            //    collision = personn1.CheckCollisionBetweenPeople(filterd_persons);
+
+                            //    filtering_query = this.population.people.Where(person_filter => person_filter != person1 && person_filter != person2);
+                            //    filterd_persons = filtering_query.ToList();
+                            //    filterd_persons.Add(personn1);
+                            //    collision1 = personn2.CheckCollisionBetweenPeople(filterd_persons);
+
+                            //    if (collision == false && wall_collision1 == false)
+                            //    {
+                            //        person1.center_x = personn1.center_x;
+                            //        person1.center_y = personn1.center_y;
+                            //    }
+
+                            //    if (collision1 == false && wall_collision2 == false)
+                            //    {
+                            //        person2.center_x = personn2.center_x;
+                            //        person2.center_y = personn2.center_y;
+                            //    }
+                            //}
                         }
 
                         if (person.center_x >= person.end_point_x && person.group == "left")
                         {
+                            // osoba dotarła do wyjścia prawego
                             person.status = 0;
                             this.population.population_count -= 1;
                             this.population.current_left_group -= 1;
@@ -114,6 +156,7 @@ namespace SymulacjeRownnolegle
 
                         if (person.center_x <= person.end_point_x && person.group == "right")
                         {
+                            // osoba dotarła do wyjścia lewego
                             person.status = 0;
                             this.population.population_count -= 1;
                             this.population.current_right_group -= 1;
@@ -457,7 +500,7 @@ namespace SymulacjeRownnolegle
         public bool CheckCollisionWithWalls()
         {
             bool collision = false;
-            if ((this.center_y - this.radius < 100) || (this.center_y + this.radius > 300))
+            if ((this.center_y - this.radius < Global.TopWall) || (this.center_y + this.radius > Global.BottomWall))
                 collision = true;
             return collision;
         }
@@ -481,8 +524,8 @@ namespace SymulacjeRownnolegle
 
     static class Global
     {
-        private static int _left_entrance_x = 10;
-        private static int _right_entrance_x = 500;
+        private static int _left_entrance_x = 50;
+        private static int _right_entrance_x = 750;
         private static int _top_wall = 100;
         private static int _bottom_wall = 300;
         private static int _wall_size = 5;
