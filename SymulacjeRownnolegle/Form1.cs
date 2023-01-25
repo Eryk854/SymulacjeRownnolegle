@@ -188,11 +188,6 @@ namespace SymulacjeRownnolegle
                     bool start_collision = new_person.CheckCollisionBetweenPeople(this.population.people);
                     bool wall_collision = new_person.CheckCollisionWithWalls();
 
-                    if (start_collision)
-                    {
-                        Console.WriteLine("Start collision");
-                    }
-
                     if (!start_collision && !wall_collision)
                     {
                         this.population.people.Add(new_person);
@@ -615,7 +610,6 @@ namespace SymulacjeRownnolegle
                             }
                         }
                     }
-                    //System.Threading.Thread.Sleep(1);
                 }
             } 
         }
@@ -718,7 +712,6 @@ namespace SymulacjeRownnolegle
                             }
                         }
                     }
-                    System.Threading.Thread.Sleep(1);
                 }
             }
         }
